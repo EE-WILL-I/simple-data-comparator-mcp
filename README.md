@@ -1,6 +1,6 @@
 # Simple Data Comparator MCP
 
-Simple toolset for performing comparison of JSON, XML, XLSX, CSV and text inputs in Actual-Expected format.
+Simple toolset for performing comparison of JSON, XML, XLSX, CSV and text data in Actual-Expected format with different options.
 
 # Documentation
 
