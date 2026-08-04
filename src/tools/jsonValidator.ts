@@ -12,6 +12,7 @@ export type JsonValidationOptions = {
   ignoreProps?: string[];
   ignoreSimilar?: boolean; // If true, ignore value differences – only fail on missing, extra, or type mismatch
   useJsonSchema?: boolean; // If true, treat validationJson as JSON Schema
+  ignoreArrayOrder?: boolean; // If true, sort arrays lexicographically before comparing
 };
 
 export type JsonValidationResult = {
@@ -123,27 +124,30 @@ export const validateJsonTemplate = (json: any, validationJson: any, options?: J
   const actual = ignoreSet.size ? stripIgnoredProps(actualRaw, ignoreSet) : actualRaw;
   const template = ignoreSet.size ? stripIgnoredProps(templateRaw, ignoreSet) : templateRaw;
 
-  const expected = buildExpectedFromTemplate(template, actual, opts);
+  const actualCompare = opts.ignoreArrayOrder ? sortArraysRecursively(actual) : actual;
+  const templateCompare = opts.ignoreArrayOrder ? sortArraysRecursively(template) : template;
+
+  const expected = buildExpectedFromTemplate(templateCompare, actualCompare, opts);
 
   // Create jsondiffpatch instance with detailed options
   const jdp = jsondiffpatch.create({
     objectHash: (obj: any) => obj?.id || obj?._id || JSON.stringify(obj),
     arrays: {
-      detectMove: true,
+      detectMove: !opts.ignoreArrayOrder,
       includeValueOnMove: false
     },
     propertyFilter: (name: string) => !ignoreSet.has(name),
     cloneDiffValues: false
   });
 
-  const delta = jdp.diff(expected, actual);
+  const delta = jdp.diff(expected, actualCompare);
 
   if (delta) {
     result.isValid = false;
     result.delta = delta;
     
     // Format detailed differences
-    const lines = formatDetailedDelta(delta, expected, actual);
+    const lines = formatDetailedDelta(delta, expected, actualCompare);
     result.differences = lines;
 
     logError('JSON validation failed: Differences detected', null, {
@@ -161,10 +165,33 @@ export const validateJsonTemplate = (json: any, validationJson: any, options?: J
   }
 
   result.expected = expected;
-  result.actual = actual;
+  result.actual = actualCompare;
 
   return result;
 };
+
+/** Sort arrays recursively so order-insensitive comparison can use a plain diff. */
+function sortArraysRecursively(value: any): any {
+  if (Array.isArray(value)) {
+    const sorted = value.map((v) => sortArraysRecursively(v));
+    sorted.sort((a, b) => {
+      const aKey = JSON.stringify(a);
+      const bKey = JSON.stringify(b);
+      if (aKey < bKey) return -1;
+      if (aKey > bKey) return 1;
+      return 0;
+    });
+    return sorted;
+  }
+  if (value && typeof value === 'object') {
+    const out: Record<string, any> = {};
+    for (const key of Object.keys(value)) {
+      out[key] = sortArraysRecursively(value[key]);
+    }
+    return out;
+  }
+  return value;
+}
 
 /**
  * Enhanced validator that returns boolean (backward compatible)

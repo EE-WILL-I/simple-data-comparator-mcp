@@ -80,6 +80,25 @@ describe('JsonValidatorEnhanced', () => {
       });
     });
 
+    describe('Options - ignoreArrayOrder', () => {
+      it('should pass when array elements match but order differs', () => {
+        const json = { tags: ['b', 'a', 'c'] };
+        const template = { tags: ['a', 'b', 'c'] };
+        const options: JsonValidationOptions = { ignoreArrayOrder: true };
+
+        const result = validateJsonTemplate(json, template, options);
+        expect(result.isValid).toBe(true);
+      });
+
+      it('should fail on order mismatch when ignoreArrayOrder is false', () => {
+        const json = { tags: ['b', 'a'] };
+        const template = { tags: ['a', 'b'] };
+
+        const result = validateJsonTemplate(json, template);
+        expect(result.isValid).toBe(false);
+      });
+    });
+
     describe('Options - ignoreSimilar', () => {
       it('should pass when values differ but types match', () => {
         const json = { name: 'Alice', age: 25, active: false };

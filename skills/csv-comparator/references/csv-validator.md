@@ -19,8 +19,12 @@ Compare a CSV **actual** string against an **expected template** CSV string. Use
 | `includeColumns` | string[] | no | — | Only compare these column headers (others stripped) |
 | `excludeColumns` | string[] | no | — | Skip these columns during comparison |
 | `ignoreRowOrder` | boolean | no | `false` | Sort data rows before comparing (header preserved) |
+| `rowKey` | string \| string[] | no | — | Header name(s) that uniquely identify a row for alignment |
+| `delimiter` | string | no | auto | CSV field delimiter for both sides |
+| `expectedDelimiter` | string | no | auto | Delimiter for the template CSV only |
+| `actualDelimiter` | string | no | auto | Delimiter for the actual CSV only |
 
-Delimiter is auto-detected per file from `,`, `;`, `\t`, or `|`. Template and actual may use different delimiters.
+Delimiter is auto-detected per file from `,`, `;`, `\t`, or `|` when not set. Template and actual may use different delimiters.
 
 ## Response
 
@@ -146,6 +150,35 @@ Same rows in different order should pass:
 }
 ```
 
+### Row key alignment
+
+Align rows by primary key instead of position — one inserted row produces one `[extra_row]`:
+
+```json
+{
+  "name": "validate-csv",
+  "arguments": {
+    "actual": "id,name\n1,Alice\n3,Charlie\n2,Bob",
+    "template": "id,name\n1,Alice\n2,Bob",
+    "rowKey": "id"
+  }
+}
+```
+
+### Force delimiter
+
+```json
+{
+  "name": "validate-csv",
+  "arguments": {
+    "actual": "name;age\nJohn;30",
+    "template": "name,age\nJohn,30",
+    "expectedDelimiter": ",",
+    "actualDelimiter": ";"
+  }
+}
+```
+
 ## Agent tips
 
 1. **Always include the header row** in both `actual` and `template`.
@@ -153,8 +186,5 @@ Same rows in different order should pass:
 3. Use **`includeColumns`** when you only care about a subset of a wide export.
 4. Use **`ignoreRowOrder`** when row position is not meaningful (e.g. unordered query results).
 5. If you get `[column_filter]` errors, compare the listed headers — a typo or wrong delimiter is usually the cause.
-6. For large CSVs, consider filtering columns first to reduce noise in diff output.
-
-## Advanced features (not exposed via MCP)
-
-The underlying `validateCsv` function also supports `rowKey` (align rows by primary key), `delimiter`, `expectedDelimiter`, and `actualDelimiter`. These are not MCP parameters today.
+6. Use **`rowKey`** when inserts/deletes should align by ID rather than row position.
+7. For large CSVs, consider filtering columns first to reduce noise in diff output.
