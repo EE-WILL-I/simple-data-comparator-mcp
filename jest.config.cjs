@@ -18,10 +18,12 @@ module.exports = {
       'ts-jest',
       {
         tsconfig: {
-          module: 'CommonJS',
+          module: 'ES2022',
           moduleResolution: 'node',
+          target: 'ES2022',
           esModuleInterop: true,
           allowSyntheticDefaultImports: true,
+          isolatedModules: true,
           strict: true,
           skipLibCheck: true,
         },
