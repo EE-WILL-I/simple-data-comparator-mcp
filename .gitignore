@@ -4,6 +4,3 @@ logs
 reports
 .env
 .cursor
-stderr.txt
-stdout.txt
-stdin.txt

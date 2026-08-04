@@ -1,5 +1,5 @@
 {
-  "name": "@ee_will_i/simple-data-comparator-mcp",
+  "name": "@ee_will_i/simple-validator-mcp",
   "version": "0.0.1",
   "description": "Simple toolset for performing validations for JSON, XML, CSV and text files with report generation in HTML format.",
   "keywords": [
@@ -7,13 +7,13 @@
     "validator",
     "comparator"
   ],
-  "homepage": "https://github.com/EE-WILL-I/simple-data-comparator-mcp#readme",
+  "homepage": "https://github.com/EE-WILL-I/simple-validator-mcp#readme",
   "bugs": {
-    "url": "https://github.com/EE-WILL-I/simple-data-comparator-mcp/issues"
+    "url": "https://github.com/EE-WILL-I/simple-validator-mcp/issues"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/EE-WILL-I/simple-data-comparator-mcp.git"
+    "url": "git+https://github.com/EE-WILL-I/simple-validator-mcp.git"
   },
   "license": "MIT",
   "author": "Bogdan Shevtsov",
@@ -42,8 +42,10 @@
     "diff-js-xml": "^1.0.8",
     "diff2html": "^3.4.56",
     "dotenv": "^16.4.7",
+    "express": "^5.2.1",
     "fast-xml-parser": "^5.10.1",
     "jsondiffpatch": "^0.7.6",
+    "rotating-file-stream": "^3.2.9",
     "uuid": "^14.0.1",
     "xlsx": "^0.18.5"
   },

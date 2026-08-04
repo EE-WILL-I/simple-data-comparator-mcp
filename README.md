@@ -21,12 +21,12 @@ Add this to your Cursor MCP settings (`.cursor/mcp.json`):
 {
   "mcpServers": {
     "simple-data-comparator-mcp": {
-      "type": "stdio",
-      "command": "npx",
-      "args": [
-        "-y",
-        "@ee_will_i/simple-data-comparator-mcp"
-      ]
+      "type": "http",
+      "url":"http:{mcp_host}:{mcp_port}/mcp",
+      "env": {
+        "LOG_FORMAT": "text",
+        "LOG_LEVEL": "info"
+      }
     }
   }
 }
