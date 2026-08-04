@@ -15,9 +15,12 @@ Compare a JSON **actual** string against an **expected template** JSON string. S
 | Parameter | Type | Required | Default | Description |
 |---|---|---|---|---|
 | `actual` | string | yes | — | JSON string to validate (the value you received) |
-| `template` | string | yes | — | Expected JSON template string |
+| `template` | string | yes | — | Expected JSON template string, or JSON Schema when `useJsonSchema` is `true` |
 | `strictMode` | boolean | no | `false` | When `true`, fail if `actual` has fields not present in `template` |
-| `ignoreArrayOrder` | boolean | no | `false` | Declared in the MCP schema; **not yet implemented** in the validator — array order is always compared |
+| `ignoreArrayOrder` | boolean | no | `false` | Sort arrays before comparing so order differences are ignored |
+| `ignoreProps` | string[] | no | — | Property names stripped from both sides before comparing |
+| `ignoreSimilar` | boolean | no | `false` | Pass when values differ but JS types match the template types |
+| `useJsonSchema` | boolean | no | `false` | Treat `template` as a JSON Schema (Ajv) instead of a literal template |
 
 `strictMode: false` (default) means extra fields in `actual` are ignored. Set `strictMode: true` to treat extra fields as failures.
 
@@ -158,14 +161,67 @@ Expected difference line:
 }
 ```
 
+### Ignore volatile properties
+
+```json
+{
+  "name": "validate-json",
+  "arguments": {
+    "actual": "{\"name\":\"John\",\"timestamp\":\"2026-01-15T10:00:00Z\"}",
+    "template": "{\"name\":\"John\",\"timestamp\":\"2026-01-01T00:00:00Z\"}",
+    "ignoreProps": ["timestamp"]
+  }
+}
+```
+
+### Type-only matching (`ignoreSimilar`)
+
+```json
+{
+  "name": "validate-json",
+  "arguments": {
+    "actual": "{\"score\":99,\"active\":false}",
+    "template": "{\"score\":0,\"active\":true}",
+    "ignoreSimilar": true
+  }
+}
+```
+→ Passes (types match; values differ).
+
+### JSON Schema validation
+
+```json
+{
+  "name": "validate-json",
+  "arguments": {
+    "actual": "{\"name\":\"Alice\",\"age\":25}",
+    "template": "{\"type\":\"object\",\"required\":[\"name\",\"age\"],\"properties\":{\"name\":{\"type\":\"string\"},\"age\":{\"type\":\"number\"}}}",
+    "useJsonSchema": true
+  }
+}
+```
+
+### Ignore array order
+
+```json
+{
+  "name": "validate-json",
+  "arguments": {
+    "actual": "{\"tags\":[\"b\",\"a\",\"c\"]}",
+    "template": "{\"tags\":[\"a\",\"b\",\"c\"]}",
+    "ignoreArrayOrder": true
+  }
+}
+```
+→ Passes (same elements, different order).
+
 ## Agent tips
 
 1. **Serialize consistently** — pass compact or pretty-printed JSON; both parse correctly. Ensure strings are valid JSON (quoted keys, no trailing commas).
 2. **Use `strictMode`** when the response must not contain unexpected fields (contract testing).
 3. **Read path prefixes** in difference lines to locate nested mismatches quickly (`user.address.city`).
 4. **Duplicate keys** in the raw `actual` string always fail, even with `strictMode: false`.
-5. For API testing workflows: capture the response body as `actual`, define the contract as `template`, call `validate-json`, then report `isError` and difference lines to the user.
-
-## Advanced features (not exposed via MCP)
-
-The underlying `validateJsonTemplate` function also supports `ignoreProps`, `ignoreSimilar`, and `useJsonSchema` (JSON Schema via Ajv). These are not available as MCP tool parameters today.
+5. Use **`ignoreProps`** for timestamps, IDs, or other volatile fields.
+6. Use **`useJsonSchema: true`** when you have a schema contract instead of a literal expected object.
+7. Use **`ignoreArrayOrder: true`** when array element order is not meaningful.
+8. For API testing workflows: capture the response body as `actual`, define the contract as `template`, call `validate-json`, then report `isError` and difference lines to the user.

@@ -10,11 +10,11 @@ Agent-oriented reference for the **simple-data-comparator-mcp** MCP server. Each
 
 | MCP Tool | Doc | Use when |
 |---|---|---|
-| `validate-json` | [json-validator.md](docs/json-validator.md) | Comparing JSON API responses, config objects, or structured data |
-| `validate-xml` | [xml-validator.md](docs/xml-validator.md) | Comparing XML documents, SOAP payloads, or config files |
-| `validate-csv` | [csv-validator.md](docs/csv-validator.md) | Comparing tabular CSV exports or reports |
-| `validate-xlsx` | [xlsx-validator.md](docs/xlsx-validator.md) | Comparing Excel workbook sheets |
-| `validate-text` | [text-validator.md](docs/text-validator.md) | Exact line-by-line text comparison (logs, plain output) |
+| `validate-json` | [json-validator.md](skills/json-comparator/references/json-validator.md) | Comparing JSON API responses, config objects, or structured data |
+| `validate-xml` | [xml-validator.md](skills/xml-comparator/references/xml-validator.md) | Comparing XML documents, SOAP payloads, or config files |
+| `validate-csv` | [csv-validator.md](skills/csv-comparator/references/csv-validator.md) | Comparing tabular CSV exports or reports |
+| `validate-xlsx` | [xlsx-validator.md](skills/xlsx-validator/references/xlsx-validator.md) | Comparing Excel workbook sheets |
+| `validate-text` | [text-validator.md](skills/text-validator/references/text-validator.md) | Exact line-by-line text comparison (logs, plain output) |
 
 ## Common response shape
 
