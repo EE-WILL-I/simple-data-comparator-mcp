@@ -2,6 +2,46 @@
 
 Simple toolset for performing comparison of JSON, XML, XLSX, CSV and text inputs in Actual-Expected format.
 
+# Documentation
+
+Agent-oriented reference for the **simple-data-comparator-mcp** MCP server. Each validator compares an **actual** value against an **expected template** and returns pass/fail with structured difference lines on failure.
+
+## Tools
+
+| MCP Tool | Doc | Use when |
+|---|---|---|
+| `validate-json` | [json-validator.md](docs/json-validator.md) | Comparing JSON API responses, config objects, or structured data |
+| `validate-xml` | [xml-validator.md](docs/xml-validator.md) | Comparing XML documents, SOAP payloads, or config files |
+| `validate-csv` | [csv-validator.md](docs/csv-validator.md) | Comparing tabular CSV exports or reports |
+| `validate-xlsx` | [xlsx-validator.md](docs/xlsx-validator.md) | Comparing Excel workbook sheets |
+| `validate-text` | [text-validator.md](docs/text-validator.md) | Exact line-by-line text comparison (logs, plain output) |
+
+## Common response shape
+
+All tools return MCP content with this structure:
+
+```json
+{
+  "content": [{ "type": "text", "text": "<result message>" }],
+  "isError": true | false
+}
+```
+
+- **Pass:** `isError: false`, text is `Validation passed.`
+- **Fail:** `isError: true`, text includes `Validation failed.` and difference lines (except text validator, which does not expose diff details via MCP)
+
+## Agent workflow
+
+1. **Choose the tool** that matches the data format you need to compare.
+2. **Prepare both sides** as strings — JSON/XML/CSV/text as plain strings; XLSX as base64-encoded file bytes.
+3. **Call the MCP tool** with `actual` (what you received) and `template` (what you expected).
+4. **Read `isError`** — if `true`, parse the difference lines to explain what diverged.
+5. **Apply options** when needed (e.g. `strictMode` for JSON, `includeColumns` for CSV, `ignoreRowOrder` for unordered row sets).
+
+## Discovering tools at runtime
+
+Use MCP tool discovery (`tools/list`) to get live schemas. Tool names are stable: `validate-json`, `validate-xml`, `validate-csv`, `validate-xlsx`, `validate-text`.
+
 ## Running locally
 
 Build and start the HTTP MCP server:
