@@ -1,2 +1,2 @@
-# SimpleValidatorMCP
-Simple toolset for performing validations for JSON, XML, CSV and text files with report generation in HTML format.
+# Simple Comparator MCP
+Simple toolset for performing comparison of JSON, XML, CSV and text inputs in Actual-Expected format.

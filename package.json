@@ -1,0 +1,61 @@
+{
+  "name": "@ee_will_i/simple-validator-mcp",
+  "version": "0.0.1",
+  "description": "Simple toolset for performing validations for JSON, XML, CSV and text files with report generation in HTML format.",
+  "keywords": [
+    "mcp",
+    "validator",
+    "comparator"
+  ],
+  "homepage": "https://github.com/EE-WILL-I/simple-validator-mcp#readme",
+  "bugs": {
+    "url": "https://github.com/EE-WILL-I/simple-validator-mcp/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/EE-WILL-I/simple-validator-mcp.git"
+  },
+  "license": "MIT",
+  "author": "Bogdan Shevtsov",
+  "type": "module",
+  "main": "./dist/index.js",
+  "scripts": {
+    "build": "tsc",
+    "start": "node ./dist/index.js",
+    "dev": "npm run build && npm run start",
+    "test": "jest"
+  },
+  "dependencies": {
+    "@aws-sdk/client-s3": "^3.1102.0",
+    "@modelcontextprotocol/sdk": "^1.29.0",
+    "@opentelemetry/api": "^1.9.1",
+    "@opentelemetry/core": "^2.10.0",
+    "@opentelemetry/resources": "^2.10.0",
+    "@opentelemetry/sdk-node": "^0.221.0",
+    "@opentelemetry/semantic-conventions": "^1.43.0",
+    "ajv": "^8.20.0",
+    "ajv-formats": "^3.0.1",
+    "csv-parse": "^7.0.2",
+    "daff": "^1.4.2",
+    "diff": "^9.0.0",
+    "diff-js-xml": "^1.0.8",
+    "diff2html": "^3.4.56",
+    "dotenv": "^16.4.7",
+    "express": "^5.2.1",
+    "fast-xml-parser": "^5.10.1",
+    "jsondiffpatch": "^0.7.6",
+    "rotating-file-stream": "^3.2.9",
+    "uuid": "^14.0.1",
+    "xlsx": "^0.18.5"
+  },
+  "devDependencies": {
+    "@babel/plugin-transform-modules-commonjs": "^7.29.7",
+    "@types/express": "^5.0.6",
+    "@types/jest": "^30.0.0",
+    "@types/node": "^26.1.2",
+    "@types/uuid": "^10.0.0",
+    "jest": "^30.4.2",
+    "ts-jest": "^29.4.12",
+    "typescript": "^5.8.3"
+  }
+}
