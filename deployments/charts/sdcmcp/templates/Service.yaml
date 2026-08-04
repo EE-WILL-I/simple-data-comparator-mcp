@@ -1,0 +1,16 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "sdcmcp.name" . }}
+  labels:
+    {{- include "sdcmcp.labels" . | nindent 4 }}
+spec:
+  type: {{ .Values.SERVICE_PORT_TYPE }}
+  sessionAffinity: ClientIP
+  ports:
+    - name: http
+      port: {{ .Values.simpleDataComparatorMcp.mcpPort }}
+      targetPort: http
+      protocol: TCP
+  selector:
+    {{- include "sdcmcp.selectorLabels" . | nindent 4 }}

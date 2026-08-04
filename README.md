@@ -1,17 +1,21 @@
-# Simple Comparator MCP
+# Simple Comparator MCP Server
 
 Simple toolset for performing comparison of JSON, XML, XLSX, CSV and text inputs in Actual-Expected format.
 
-## Running
+## Running locally
 
-Build and start the stdio MCP server:
+Build and start the HTTP MCP server:
 
 ```bash
 npm run build
 npm start
 ```
 
-The server communicates over stdin/stdout. Logs are written to stderr so they do not interfere with MCP protocol messages.
+The server listens on `http://0.0.0.0:3000/mcp` by default. Health check: `GET /health`.
+
+## Kubernetes
+
+See [deployments/README.md](deployments/README.md) for Docker image build and Helm chart installation.
 
 ## Cursor configuration
 
@@ -22,7 +26,7 @@ Add this to your Cursor MCP settings (`.cursor/mcp.json`):
   "mcpServers": {
     "simple-data-comparator-mcp": {
       "type": "http",
-      "url":"http:{mcp_host}:{mcp_port}/mcp",
+      "url": "http://localhost:3000/mcp",
       "env": {
         "LOG_FORMAT": "text",
         "LOG_LEVEL": "info"
@@ -32,4 +36,4 @@ Add this to your Cursor MCP settings (`.cursor/mcp.json`):
 }
 ```
 
-Replace the path with your local project path. Run `npm run build` before starting the server.
+For a cluster deployment, use the ingress URL instead of `localhost`.

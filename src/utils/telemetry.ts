@@ -15,7 +15,7 @@ import { Request, Response, NextFunction } from 'express';
 import { v4 as uuidv4 } from 'uuid';
 
 // Service information
-const SERVICE_NAME = process.env.SERVICE_NAME || 'simple-validator-mcp';
+const SERVICE_NAME = process.env.SERVICE_NAME || 'simple-data-comparator-mcp';
 const SERVICE_VERSION = process.env.SERVICE_VERSION || 'local';
 
 // Initialize OpenTelemetry SDK

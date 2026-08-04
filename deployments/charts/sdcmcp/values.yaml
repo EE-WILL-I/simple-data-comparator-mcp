@@ -1,0 +1,49 @@
+PAAS_PLATFORM: "KUBERNETES"
+SERVICE_TYPE: "MCP"
+SERVICE_NAME: "simple-data-comparator-mcp"
+DOCKER_TAG: ""
+SERVICE_PORT_TYPE: "ClusterIP"
+SECURITY_CONTEXT_ENABLED: true
+REPLICAS: 1  # Must be 1 unless ingress/service session affinity is configured (in-memory MCP sessions)
+
+# Used by ingress host helper when MCP_INGRESS_HOST is empty
+CLOUD_PUBLIC_HOST: ""
+NAMESPACE: ""
+MCP_INGRESS_HOST: ""
+
+simpleDataComparatorMcp:
+  serviceName: "simple-data-comparator-mcp"
+  mcpPort: 3000
+  logLevel: "info"
+  logFormat: "text"
+  nodeOptions: "--max-old-space-size=512"
+  podSecurityContext:
+    runAsUser: 1000
+    runAsGroup: 1000
+    fsGroup: 1000
+  containerSecurityContext: {}
+  extraEnvs: []
+  affinity:
+    podAntiAffinity:
+      preferredDuringSchedulingIgnoredDuringExecution:
+        - weight: 100
+          podAffinityTerm:
+            labelSelector:
+              matchExpressions:
+                - key: app
+                  operator: In
+                  values:
+                    - simple-data-comparator-mcp
+            topologyKey: kubernetes.io/hostname
+  tolerations: []
+  ingress:
+    enabled: true
+    className: ""
+    annotations:
+      haproxy.router.openshift.io/timeout: 10h
+      nginx.ingress.kubernetes.io/proxy-read-timeout: "3600"
+      nginx.ingress.kubernetes.io/proxy-send-timeout: "3600"
+    tls: true
+  serviceMonitor:
+    enabled: false
+    interval: 30s

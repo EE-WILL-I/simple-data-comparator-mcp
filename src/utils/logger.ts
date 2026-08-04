@@ -26,7 +26,7 @@ export type GraylogMessage = {
 
 type LogFormat = 'gelf' | 'text';
 
-const HOST = process.env.MCP_HOST || 'simple-validator-mcp';
+const HOST = process.env.MCP_HOST || 'simple-data-comparator-mcp';
 // Resolve logs dir relative to the process working directory (project root at runtime and in tests)
 const LOG_DIR = path.resolve(process.env.LOG_DIR_OVERRIDE ?? process.cwd(), 'logs');
 const LOG_LEVEL = LogLevelFromString(process.env.LOG_LEVEL || 'INFO');
@@ -158,7 +158,7 @@ function writeTextLog(level: LogLevel, shortMessage: string, mergedFields: Recor
   const orderedParts = [timePart, levelPart, requestIdPart, tenantIdPart, traceIdPart, spanIdPart, threadPart, classPart];
 
   const optionalPairs: Array<string> = [];
-  addOptional(optionalPairs, 'host', HOST || 'simple-validator-mcp');
+  addOptional(optionalPairs, 'host', HOST || 'simple-data-comparator-mcp');
   addOptional(optionalPairs, 'method', normalized.method);
   addOptional(optionalPairs, 'version', normalized.version);
   addOptional(optionalPairs, 'error_code', normalized.error_code);

@@ -10,14 +10,14 @@ import { logInfo, logError } from './utils/logger.js';
 import { registerTools } from './toolRegistry.js';
 
 const MCP_PORT = parseInt(process.env.MCP_PORT ?? '3000', 10);
-const MCP_HOST = process.env.MCP_HOST ?? 'localhost';
+const MCP_HOST = process.env.MCP_HOST ?? '0.0.0.0';
 
 // Per-session transport map (stateful mode)
 const transports = new Map<string, StreamableHTTPServerTransport>();
 
 function buildMcpServer(): McpServer {
   const server = new McpServer({
-    name: 'simple-validator-mcp',
+    name: 'simple-data-comparator-mcp',
     version: '0.0.1',
   });
   registerTools(server);
@@ -111,7 +111,7 @@ app.get('/health', (_req, res) => {
 
 const httpServer = createServer(app as any);
 
-httpServer.listen(MCP_PORT, () => {
+httpServer.listen(MCP_PORT, MCP_HOST, () => {
   logInfo(`MCP server listening on http://${MCP_HOST}:${MCP_PORT}/mcp`);
 });
 
@@ -121,11 +121,19 @@ httpServer.on('error', (err: Error) => {
 });
 
 // ── Graceful shutdown ──────────────────────────────────────────────────────
-process.on('SIGINT', async () => {
-  logInfo('Shutting down MCP server...');
+async function shutdown(signal: string): Promise<void> {
+  logInfo(`Shutting down MCP server (${signal})...`);
   for (const [sid, t] of transports) {
     try { await t.close(); } catch { /* ignore */ }
     transports.delete(sid);
   }
   httpServer.close(() => process.exit(0));
+}
+
+process.on('SIGINT', () => {
+  void shutdown('SIGINT');
+});
+
+process.on('SIGTERM', () => {
+  void shutdown('SIGTERM');
 });

@@ -1,0 +1,81 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "sdcmcp.name" . }}
+  labels:
+    {{- include "sdcmcp.labels" . | nindent 4 }}
+spec:
+  replicas: {{ .Values.REPLICAS }}
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 0
+      maxSurge: 1
+  selector:
+    matchLabels:
+      {{- include "sdcmcp.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      labels:
+        {{- include "sdcmcp.selectorLabels" . | nindent 8 }}
+        servicetype: {{ .Values.SERVICE_TYPE }}
+    spec:
+      securityContext:
+        {{- include "sdcmcp.podSecurityContext" . | nindent 8 }}
+      {{- with .Values.simpleDataComparatorMcp.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.simpleDataComparatorMcp.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      containers:
+        - name: {{ include "sdcmcp.name" . }}
+          image: {{ required "DOCKER_TAG is required" .Values.DOCKER_TAG }}
+          imagePullPolicy: IfNotPresent
+          {{- if .Values.SECURITY_CONTEXT_ENABLED }}
+          securityContext:
+            {{- include "sdcmcp.containerSecurityContext" . | nindent 12 }}
+          {{- end }}
+          ports:
+            - name: http
+              containerPort: {{ .Values.simpleDataComparatorMcp.mcpPort }}
+              protocol: TCP
+          env:
+            - name: MCP_HOST
+              value: "0.0.0.0"
+            - name: MCP_PORT
+              value: {{ .Values.simpleDataComparatorMcp.mcpPort | quote }}
+            - name: LOG_LEVEL
+              value: {{ .Values.simpleDataComparatorMcp.logLevel | quote }}
+            - name: LOG_FORMAT
+              value: {{ .Values.simpleDataComparatorMcp.logFormat | quote }}
+            - name: NODE_OPTIONS
+              value: {{ .Values.NODE_OPTIONS | default .Values.simpleDataComparatorMcp.nodeOptions | quote }}
+          {{- with .Values.simpleDataComparatorMcp.extraEnvs }}
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: http
+            initialDelaySeconds: 5
+            periodSeconds: 10
+            timeoutSeconds: 3
+            failureThreshold: 3
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: http
+            initialDelaySeconds: 15
+            periodSeconds: 20
+            timeoutSeconds: 3
+            failureThreshold: 3
+          resources:
+            requests:
+              memory: {{ .Values.MEMORY_REQUEST | quote }}
+              cpu: {{ .Values.CPU_REQUEST | quote }}
+            limits:
+              memory: {{ .Values.MEMORY_LIMIT | quote }}
+              cpu: {{ .Values.CPU_LIMIT | quote }}

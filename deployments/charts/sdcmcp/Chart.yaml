@@ -1,0 +1,5 @@
+apiVersion: v2
+name: simple-data-comparator-mcp
+version: "1.0.0"
+appVersion: "0.0.1"
+description: Helm chart to deploy the Simple Data Comparator MCP HTTP server on Kubernetes.

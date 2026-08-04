@@ -1,0 +1,17 @@
+node_modules
+dist
+build
+logs
+reports
+.env
+.env.*
+.git
+.gitignore
+.cursor
+coverage
+**/__tests__
+**/*.test.ts
+**/*.test.js
+reports
+deployments
+README.md
