@@ -61,4 +61,4 @@ Paths use dot notation; repeated elements use `[index]`. Attributes are included
 
 ## Full reference
 
-See [references/xml-validator.md](references/xml-validator.md) for extended examples.
+See [references/xml-comparator.md](references/xml-comparator.md) for extended examples.

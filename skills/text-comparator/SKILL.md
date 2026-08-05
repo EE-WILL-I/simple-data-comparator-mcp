@@ -1,9 +1,9 @@
 ---
-name: text-validator
+name: text-comparator
 description: Compares plain text actual vs expected via the validate-text MCP tool. Use when validating logs, CLI stdout, fixed-format text reports, or when the user asks for exact line-by-line text comparison.
 ---
 
-# Text Validator
+# Text comparator
 
 Compare **actual** text against an **expected template** using the `validate-text` MCP tool (`simple-data-comparator-mcp` server). Comparison is exact, line-by-line.
 
@@ -33,7 +33,7 @@ No diff lines are returned via MCP. If the user needs to know *what* differed:
 - Compare both strings side by side locally
 - Or use a diff tool / `diffLines` in code
 
-## Comparison rules (built into validator)
+## Comparison rules (built into comparator)
 
 - Line-based splitting on newlines
 - Whitespace within lines is significant (leading/trailing spaces matter)
@@ -62,8 +62,8 @@ No diff lines are returned via MCP. If the user needs to know *what* differed:
 
 - Do not use `validate-text` for JSON, XML, or CSV — format-specific tools give actionable diff output.
 - Normalize `\r\n` → `\n` before comparing when data comes from Windows and Unix sources.
-- For structured pass/fail with diff details, pick the matching format validator.
+- For structured pass/fail with diff details, pick the matching format comparator.
 
 ## Full reference
 
-See [references/text-validator.md](references/text-validator.md) for extended examples.
+See [references/text-comparator.md](references/text-comparator.md) for extended examples.

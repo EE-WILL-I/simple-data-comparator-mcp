@@ -97,4 +97,4 @@ Paths use dot notation and `[index]` for arrays (e.g. `users[0].email`).
 
 ## Full reference
 
-See [references/json-validator.md](references/json-validator.md) for extended examples.
+See [references/json-comparator.md](references/json-comparator.md) for extended examples.

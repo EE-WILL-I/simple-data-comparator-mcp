@@ -1,6 +1,6 @@
 {
   "name": "@ee_will_i/simple-data-comparator-mcp",
-  "version": "0.0.2",
+  "version": "0.0.4",
   "description": "Simple toolset for performing validations for JSON, XML, CSV and text files with report generation in HTML format.",
   "keywords": [
     "mcp",

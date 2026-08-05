@@ -86,4 +86,4 @@ Header matching is **case-sensitive** (BOM and surrounding whitespace tolerated)
 
 ## Full reference
 
-See [references/csv-validator.md](references/csv-validator.md) for extended examples.
+See [references/csv-comparator.md](references/csv-comparator.md) for extended examples.
