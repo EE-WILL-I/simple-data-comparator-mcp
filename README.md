@@ -1,5 +1,11 @@
 # Simple Data Comparator MCP
 
+[![npm](https://img.shields.io/npm/v/%40ee_will_i%2Fsimple-data-comparator-mcp)](https://www.npmjs.com/package/@ee_will_i/simple-data-comparator-mcp)
+[![License: MIT](https://img.shields.io/badge/license-MIT-green)](LICENSE)
+[![MCP](https://img.shields.io/badge/protocol-MCP-orange)](https://modelcontextprotocol.io)
+[![Node](https://img.shields.io/badge/node-%3E%3D20-339933?style=flat-square)](package.json)
+[![TypeScript](https://img.shields.io/badge/types-TypeScript-3178c6?style=flat-square)](dist/index.d.ts)
+
 Simple toolset for performing comparison of JSON, XML, XLSX, CSV and text data in Actual-Expected format with different options.
 
 # Documentation
